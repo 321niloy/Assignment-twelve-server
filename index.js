@@ -9,6 +9,7 @@ app.use(express.json())
 app.use(cors())
 console.log(process.env.ADMIN_USER)
 
+const stripe = require("stripe")('')
 
 const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 var uri = `mongodb://${process.env.ADMIN_USER}:${process.env.ADDMIN_PASS}@ac-mvazqsy-shard-00-00.hpy6sqt.mongodb.net:27017,ac-mvazqsy-shard-00-01.hpy6sqt.mongodb.net:27017,ac-mvazqsy-shard-00-02.hpy6sqt.mongodb.net:27017/?ssl=true&replicaSet=atlas-vll8ae-shard-0&authSource=admin&retryWrites=true&w=majority`;
@@ -31,6 +32,7 @@ async function run() {
     const instrumentCollection = client.db("learnHub").collection("instruement");
     const usersCollection = client.db("learnHub").collection("users");
     const getCollection=client.db("learnHub").collection("get");
+    const reqCollection=client.db("learnHub").collection("request");
     // Send a ping to confirm a successful connection
     // for user
     app.put('/users/:email', async(req,res)=>{
@@ -97,7 +99,25 @@ async function run() {
         const result = await getCollection.deleteOne(query);
         res.send(result);
       })
+      // ////////////  Request colection
 
+      app.post('/requestcollection', async(req,res)=>{
+        const newItem = req.body;
+        const result = await reqCollection.insertOne(newItem)
+        res.send(result);
+    });
+    app.get('/requestcollection', async (req, res) => {
+      const result = await reqCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.delete('/requestcollection/:id',async (req, res) => {
+      const id = req.params.id;
+      console.log(id)
+      const query = { _id: new ObjectId(id) }
+      const result = await reqCollection.deleteOne(query);
+      res.send(result);
+    })
     // //////////////////////////////////////////////
 
     await client.db("admin").command({ ping: 1 });
