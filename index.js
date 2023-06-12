@@ -65,7 +65,7 @@ async function run() {
       });
 //  ------------------------------------ instructor end
 
-// ------------Instrument
+// ------------Instrument start
       app.get('/instruement', async (req, res) => {
         const result = await instrumentCollection.find().toArray();
         res.send(result);
@@ -77,7 +77,7 @@ async function run() {
         const result = await instrumentCollection.insertOne(newItem)
         res.send(result);
     });
-    //   ///////////////////////////////////////
+    //   /////////////////////////////////////// instrument end
 
     // -----------------------------get instrument classed
     app.post('/instrucarts', async(req,res)=>{
