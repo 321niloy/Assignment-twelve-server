@@ -55,15 +55,15 @@ async function run() {
       res.send(result);
     });
 
-    // //////////////////////////////
+    // //////////////////////////////user end
 
-    // for instructos
+    // for instructos start
 
     app.get('/instructor', async (req, res) => {
         const result = await instructorsCollection.find().toArray();
         res.send(result);
       });
-//  ------------------------------------
+//  ------------------------------------ instructor end
 
 // ------------Instrument
       app.get('/instruement', async (req, res) => {
