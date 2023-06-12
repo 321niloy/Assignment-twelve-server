@@ -121,7 +121,7 @@ async function run() {
       const result = await reqCollection.deleteOne(query);
       res.send(result);
     })
-    // //////////////////////////////////////////////
+    // ////////////////////////////////////////////// request connection end
     // --------Create Payment Intent
     app.post("/create-payment-intent", async (req, res) => {
       const { price } = req.body;
