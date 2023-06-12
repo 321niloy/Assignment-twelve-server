@@ -138,6 +138,7 @@ async function run() {
     });
 
       });
+      // payment related end
 // ======= Payment Related Api
 app.post('/payments', async(req,res)=>{
   const payment = req.body
@@ -149,12 +150,12 @@ app.post('/payments', async(req,res)=>{
 
   res.send({insertResult,deleteResult});
 })
-
+//  post payment end
 app.get('/paymentget', async (req, res) => {
   const result = await paymentCollection.find().toArray();
   res.send(result);
 });
-      // ----------------------------------
+      // ---------------------------------- payment related api end
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -168,7 +169,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Assignment twelve')
 })
 
 app.listen(port, () => {
