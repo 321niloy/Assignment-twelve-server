@@ -34,6 +34,7 @@ async function run() {
     const usersCollection = client.db("learnHub").collection("users");
     const getCollection=client.db("learnHub").collection("get");
     const reqCollection=client.db("learnHub").collection("request");
+    const paymentCollection=client.db("learnHub").collection("payments");
     // Send a ping to confirm a successful connection
     // for user
     app.put('/users/:email', async(req,res)=>{
@@ -124,7 +125,7 @@ async function run() {
     app.post("/create-payment-intent", async (req, res) => {
       const { price } = req.body;
      const amount = price*100
-     console.log("silisili",price,amount)
+     console.log("sil",price,amount)
      const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: 'usd',
@@ -136,6 +137,23 @@ async function run() {
     });
 
       });
+// ======= Payment Related Api
+app.post('/payments', async(req,res)=>{
+  const payment = req.body
+  console.log("payyyyyy",payment)
+  const insertResult = await paymentCollection.insertOne(payment);
+
+  const query = { _id: { $in: payment.cartItems.map(id => new ObjectId(id)) } }
+  const deleteResult = await getCollection.deleteMany(query)
+
+  res.send({insertResult,deleteResult});
+})
+
+app.get('/paymentget', async (req, res) => {
+  const result = await paymentCollection.find().toArray();
+  res.send(result);
+});
+      // ----------------------------------
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
