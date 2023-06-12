@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors');
 require('dotenv').config()
+const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY)
 const port =process.env.PORT ||  3000
 
 
@@ -9,7 +10,7 @@ app.use(express.json())
 app.use(cors())
 console.log(process.env.ADMIN_USER)
 
-const stripe = require("stripe")('')
+
 
 const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 var uri = `mongodb://${process.env.ADMIN_USER}:${process.env.ADDMIN_PASS}@ac-mvazqsy-shard-00-00.hpy6sqt.mongodb.net:27017,ac-mvazqsy-shard-00-01.hpy6sqt.mongodb.net:27017,ac-mvazqsy-shard-00-02.hpy6sqt.mongodb.net:27017/?ssl=true&replicaSet=atlas-vll8ae-shard-0&authSource=admin&retryWrites=true&w=majority`;
@@ -119,6 +120,22 @@ async function run() {
       res.send(result);
     })
     // //////////////////////////////////////////////
+    // --------Create Payment Intent
+    app.post("/create-payment-intent", async (req, res) => {
+      const { price } = req.body;
+     const amount = price*100
+     console.log("silisili",price,amount)
+     const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: 'usd',
+      payment_method_types: ['card']
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+
+      });
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
