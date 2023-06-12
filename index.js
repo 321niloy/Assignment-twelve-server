@@ -101,6 +101,7 @@ async function run() {
         const result = await getCollection.deleteOne(query);
         res.send(result);
       })
+      // -----------------------------------------instrucarts end
       // ////////////  Request colection
 
       app.post('/requestcollection', async(req,res)=>{
